@@ -1,4 +1,6 @@
 import logging
+import re
+import math
 
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
@@ -87,6 +89,7 @@ class Extractor(BaseEstimator, ClassifierMixin):
         # happens for now, but this might be important if the features change
         features_mat = np.concatenate([self.features.fit_transform(blocks)
                                        for blocks in block_groups])
+        print("model fitting...")
         if weights is None:
             self.model.fit(features_mat, labels)
         else:
@@ -109,18 +112,20 @@ class Extractor(BaseEstimator, ClassifierMixin):
         all_html = []
         all_labels = []
         all_weights = []
+
         for html, content, comments in data:
             all_html.append(html)
-            labels, weights = self._get_labels_and_weights(
-                content, comments)
+            labels, weights = self._get_labels_and_weights(content, comments)
             all_labels.append(labels)
             all_weights.append(weights)
-        return np.array(all_html), np.array(all_labels), np.array(all_weights)
+
+        # return np.array(all_html), np.array(all_labels), np.array(all_weights)  # MemoryError
+        return all_html, all_labels, all_weights
 
     def _has_enough_blocks(self, blocks):
         if len(blocks) < 3:
-            logging.warning(
-                'extraction failed: too few blocks (%s)', len(blocks))
+            # logging.warning(
+            #     'extraction failed: too few blocks (%s)', len(blocks))
             return False
         return True
 

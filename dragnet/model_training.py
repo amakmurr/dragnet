@@ -96,8 +96,8 @@ def train_model(extractor, data_dir, output_dir=None):
     # prepare and split the data
     logging.info('preparing, splitting, and concatenating the data...')
     data = prepare_all_data(data_dir)
-    training_data, test_data = train_test_split(
-        data, test_size=0.2, random_state=42)
+    training_data, test_data = train_test_split(data, test_size=0.2, random_state=42)
+
     train_html, train_labels, train_weights = extractor.get_html_labels_weights(training_data)
     test_html, test_labels, test_weights = extractor.get_html_labels_weights(test_data)
 
@@ -207,7 +207,7 @@ def train_many_models(extractor, param_grid, data_dir, output_dir=None,
 
 def _set_up_output_dir_and_fname_prefix(output_dir, extractor):
     if output_dir is not None:
-        output_dir = os.path.join(output_dir, model_path)
+        # output_dir = os.path.join(output_dir, model_path)  # model_path = 'py2_sklearn_0.18.0'
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
         if isinstance(extractor.features, FeatureUnion):
